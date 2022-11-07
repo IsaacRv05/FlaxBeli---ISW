@@ -1,0 +1,71 @@
+<div class="mat-elevation-z8" *ngIf="dataSource">
+  <mat-card-title>
+    Aplicaciones
+    <a
+      mat-fab
+      matTooltip="Crear Mesa"
+      aria-label="Crear Mesa"
+      color="primary"
+      (click)="crearMesa()"
+    >
+      <mat-icon>add</mat-icon>
+    </a>
+  </mat-card-title>
+    <table mat-table [dataSource]="dataSource" class="full-width-table" 
+    matSort 
+    matSortStart="desc"
+    aria-label="Elements">
+      <!-- Id Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+        <td mat-cell *matCellDef="let row">{{row.id}}</td>
+      </ng-container>
+  
+      <!-- Name Column -->
+      <ng-container matColumnDef="codigoMesa">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Código Mesa</th>
+        <td mat-cell *matCellDef="let row">{{row.codigoMesa}}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="estadoMesa">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Capacidad</th>
+        <td mat-cell *matCellDef="let row">{{row.estadoMesa}}</td>
+      </ng-container>
+   
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Detalle</th>
+        <td mat-cell *matCellDef="let row">
+          <button
+            mat-mini-fab
+            matTooltip="Detalle Mesa"
+            aria-label="Detalle Mesa"
+            color="primary"
+            (click)="detalleMesa(row.id)"
+          >
+            <mat-icon class="mat-18">info</mat-icon>
+          </button>
+
+          <button
+          mat-mini-fab
+          matTooltip="Actualizar Mesa"
+          aria-label="Actualizar Mesa"
+          color="primary"
+          (click)="actualizarMesa(row.id)"
+        >
+          <mat-icon class="mat-18">edit</mat-icon>
+        </button>
+        </td>
+      </ng-container>
+      
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator #paginator
+        [length]="dataSource?.data?.length"
+        [pageIndex]="0"
+        [pageSize]="10"
+        [pageSizeOptions]="[3, 5, 10]"
+        aria-label="Seleccione una página">
+    </mat-paginator>
+  </div>

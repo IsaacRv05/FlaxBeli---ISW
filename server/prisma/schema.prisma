@@ -1,0 +1,157 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id            Int         @id @default(autoincrement())
+  email         String      @unique
+  nombre        String
+  role          Role
+  password      String
+  restaurante   Restaurante @relation(fields: [restauranteId], references: [id])
+  restauranteId Int
+  ordenes       Pedido[]
+  facturas      Factura[]
+}
+
+// Mesero solo vera los productos y las mesas de restaurante y el cliente solo los productos
+
+model Producto {
+  id              Int               @id @default(autoincrement())
+  nombre          String
+  descripcion     String
+  ingredientes    String
+  precio          Decimal           @db.Decimal(10, 2)
+  estado          Estado
+  categoria       Categoria
+  restaurantes    Restaurante[]
+  PedidoOnProduto PedidoOnProduto[]
+}
+
+model Pedido {
+  id         Int               @id @default(autoincrement())
+  fechaOrden DateTime          @default(now())
+  estado     EstadoComanda
+  usuario    Usuario           @relation(fields: [usuarioId], references: [id])
+  usuarioId  Int
+  notas      String
+  subtotal   Decimal           @db.Decimal(10, 2)
+  factura    Factura           @relation(fields: [facturaId], references: [id])
+  facturaId  Int
+  productos  PedidoOnProduto[]
+  mesa       Mesa              @relation(fields: [mesaId], references: [id])
+  mesaId     Int
+}
+
+model PedidoOnProduto {
+  pedido     Pedido   @relation(fields: [pedidoId], references: [id])
+  pedidoId   Int
+  producto   Producto @relation(fields: [productoId], references: [id])
+  productoId Int
+  cantidad   Int
+
+  @@id([pedidoId, productoId])
+}
+
+// model ProductoOnRestaurante {
+//   producto      Producto    @relation(fields: [productoId], references: [id])
+//   productoId    Int
+//   restaurante   Restaurante @relation(fields: [restauranteId], references: [id])
+//   restauranteId Int
+
+//   @@id([restauranteId, productoId])
+// }
+
+// model MesaOnPedido {
+//   pedido   Pedido @relation(fields: [pedidoId], references: [id])
+//   pedidoId Int
+//   mesa     Mesa   @relation(fields: [mesaId], references: [id])
+//   mesaId   Int
+
+//   @@id([pedidoId, mesaId])
+// }
+
+enum Role {
+  Cliente
+  Administrador
+  Empleado
+}
+
+model Mesa {
+  id            Int         @id @default(autoincrement())
+  codigoMesa    String
+  capacidad     Int
+  estadoMesa    EstadoMesa
+  restaurante   Restaurante @relation(fields: [restauranteId], references: [id])
+  restauranteId Int
+  pedidos       Pedido[]
+}
+
+enum Estado {
+  Habilitado
+  Inhabilitado
+}
+
+enum EstadoMesa {
+  Desocupada
+  Reservada
+  Ocupada
+  ComandaRegistrada
+  PorPagar
+  Inactiva
+}
+
+enum EstadoComanda {
+  Registrada
+  EnProceso
+  Pendientes
+  Entregada
+  PorPagar
+}
+
+enum Categoria {
+  Desayunos
+  Almuerzos
+  ComidasRapidas
+}
+
+enum TipoPago {
+  Efectivo
+  Tarjeta
+}
+
+model Restaurante {
+  id        Int        @id
+  nombre    String
+  ubicacion String
+  Mesa      Mesa[]
+  usuarios  Usuario[]
+  productos Producto[]
+}
+
+model Factura {
+  id           Int      @id @default(autoincrement())
+  usuario      Usuario  @relation(fields: [usuarioId], references: [id])
+  usuarioId    Int
+  fechaFactura DateTime @default(now())
+  impuesto     Decimal  @db.Decimal(10, 2)
+  total        Decimal  @db.Decimal(10, 2)
+  pedidos      Pedido[]
+  pagos        Pago[]
+}
+
+model Pago {
+  id        Int      @id @default(autoincrement())
+  tipoPago  TipoPago
+  monto     Decimal  @db.Decimal(10, 2)
+  factura   Factura  @relation(fields: [facturaId], references: [id])
+  facturaId Int
+}

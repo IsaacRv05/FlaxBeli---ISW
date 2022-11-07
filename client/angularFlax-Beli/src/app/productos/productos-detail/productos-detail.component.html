@@ -1,0 +1,18 @@
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon" color="primary">close</mat-icon>
+</button>
+<div *ngIf="datos" class="template">
+<mat-dialog-content >
+  <p>Identificador: {{datos.id}}</p>
+  <p>Descripción: {{datos.descripcion}}</p>
+  <h4>Ingredientes: {{datos.ingredientes}}</h4>
+  <h4>Disponible en los restaurantes:</h4>
+  <ul *ngIf="datos.restaurantes">
+    <h4 *ngFor="let item of datos.restaurantes">{{item.nombre}} - {{item.ubicacion}}</h4>  
+ </ul>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+ 
+</mat-dialog-actions>
+</div>

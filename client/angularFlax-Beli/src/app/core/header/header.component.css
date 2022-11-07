@@ -1,0 +1,21 @@
+.example-spacer {
+   flex: 1 1 auto;
+ }
+
+ .buttonMenu:hover {
+   background-color: yellow;
+   color:black;
+ }
+ .toolbar {
+  top: 0;
+  width: 100%;
+  padding: 20px;
+  background-color: black;
+ }
+
+ .titulo{
+  text-decoration: underline;
+    text-decoration-color: yellow;
+    font:oblique bold 120% cursive ;
+    margin: 1%;
+ }

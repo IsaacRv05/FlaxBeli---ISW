@@ -1,0 +1,12 @@
+.full-width-table {
+  width: 100%;
+  color: yellow;
+  background-color: black;
+}
+
+th{
+  color: white;
+}
+td{
+  color: yellow;
+}
