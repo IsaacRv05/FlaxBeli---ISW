@@ -26,10 +26,11 @@
               </mat-form-field>
             </div>
           </div>
+
           <div class="row">
             <div class="col" *ngIf="restaurantesList">
               <mat-form-field class="full-width">
-                <mat-select placeholder="Restaurantes" formControlName="restaurante" multiple>
+                <mat-select placeholder="Restaurantes" formControlName="restaurante" >
                   <mat-option *ngFor="let g of restaurantesList" [value]="g.id">
                     {{ g.nombre }}
                   </mat-option>
@@ -40,6 +41,7 @@
               </mat-form-field>
             </div>
           </div>
+          
           <div class="row">
             <div class="col">
               <mat-label>Estado</mat-label><br>

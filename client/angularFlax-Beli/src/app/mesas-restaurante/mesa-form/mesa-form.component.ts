@@ -17,7 +17,7 @@ export class MesaFormComponent implements OnInit {
   respMesa:any;
   submitted = false;
   mesaForm!: FormGroup;
-  idVideojuego: number = 0;
+  idMesa: number = 0;
   isCreate:boolean=true;
 
   constructor(private fb: FormBuilder, private gService: GenericService,
@@ -30,12 +30,12 @@ export class MesaFormComponent implements OnInit {
   ngOnInit(): void {
         //Verificar si se envio un id por parametro para crear formulario para actualizar
         this.activeRouter.params.subscribe((params:Params)=>{
-          this.idVideojuego=params['id'];
-          if(this.idVideojuego!=undefined){
+          this.idMesa=params['id'];
+          if(this.idMesa!=undefined){
             this.isCreate=false;
             this.titleForm="Actualizar";
              //Obtener videojuego a actualizar del API
-             this.gService.get('mesa',this.idVideojuego).pipe(takeUntil(this.destroy$))
+             this.gService.get('mesa',this.idMesa).pipe(takeUntil(this.destroy$))
              .subscribe((data:any)=>{
               this.mesaInfo=data;
               this.mesaForm.setValue({
@@ -43,7 +43,7 @@ export class MesaFormComponent implements OnInit {
                 codigoMesa:this.mesaInfo.codigoMesa,
                 capacidad:this.mesaInfo.capacidad,
                 estadoMesa:this.mesaInfo.estadoMesa,
-                restaurante:this.mesaInfo.restauranteId.map(({id}) => id)
+                restauranteId:this.mesaInfo.restauranteId,
               })
              });
           }
@@ -87,17 +87,13 @@ export class MesaFormComponent implements OnInit {
       return;
     }
     
-    //Obtener id Generos del Formulario y Crear arreglo con {id: value}
-    let gFormat:any=this.mesaForm.get('restauranteId')?.value.map(x=>({['id']: x }));
-    //Asignar valor al formulario 
-    this.mesaForm.patchValue({ restauranteId:gFormat});
     console.log(this.mesaForm.value);
     //Accion API create enviando toda la informacion del formulario
     this.gService.create('mesa',this.mesaForm.value)
     .pipe(takeUntil(this.destroy$)) .subscribe((data: any) => {
       //Obtener respuesta
       this.respMesa=data;
-      this.router.navigate(['/mesa/all'],{
+      this.router.navigate(['/mesas/all'],{
         queryParams: {create:'true'}
       });
     });
@@ -111,11 +107,6 @@ export class MesaFormComponent implements OnInit {
     if(this.mesaForm.invalid){
       return;
     }
-    
-    //Obtener id Generos del Formulario y Crear arreglo con {id: value}
-    let gFormat:any=this.mesaForm.get('restaurante')?.value.map(x=>({['id']: x }));
-    //Asignar valor al formulario 
-    this.mesaForm.patchValue({ restaurante:gFormat});
     console.log(this.mesaForm.value);
     //Accion API create enviando toda la informacion del formulario
     this.gService.update('mesa',this.mesaForm.value)
