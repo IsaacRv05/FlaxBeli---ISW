@@ -32,9 +32,7 @@ module.exports.create = async (request, response, next) => {
       codigoMesa: mesa.codigoMesa,
       capacidad: parseInt(mesa.capacidad),
       estadoMesa: mesa.estadoMesa,
-      restaurante: {
-          connect: mesa.restaurante,
-        },
+      restauranteId:mesa.restaurante,
     },
   });
   response.json(newMesa);
@@ -63,10 +61,10 @@ module.exports.update = async (request, response, next) => {
       codigoMesa: mesa.codigoMesa,
       capacidad: mesa.capacidad,
       estodoMesa: mesa.estodoMesa,
-      restaurante: {
+      restauranteId: {
         //Generos tiene que ser {id:valor}
-        disconnect: mesaVieja.restauranteId,    
-        connect: mesa.restauranteId,
+        disconnect: mesaVieja.restaurante,    
+        connect: mesa.restaurante,
       },
     },
   });
